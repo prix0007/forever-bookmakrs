@@ -42,6 +42,8 @@ import {
 
 import { encode } from "js-base64";
 
+import Logo from "../icons/logo";
+
 const Navbar = () => {
   const { colorMode, toggleColorMode } = useColorMode();
 
@@ -159,9 +161,12 @@ const Navbar = () => {
           justifyContent={{ base: "flex-start", md: "space-between" }}
         >
           <Box display={"flex"}>
+            <Link to={"/"}>
+              <Logo width={40} color={"teal"} />
+            </Link>
             <Link to={"/home"}>
-              <Button variant={"solid"} fontWeight="bold" mr={2}>
-                Home
+              <Button variant={"solid"} fontWeight="bold" mx={2}>
+                Bookmarks
               </Button>
             </Link>
             <Link to="/about">
