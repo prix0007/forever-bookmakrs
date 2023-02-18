@@ -1,5 +1,6 @@
 import {
   Box,
+  Flex,
   Heading,
   IconButton,
   List,
@@ -11,10 +12,11 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import { useDispatch } from "react-redux";
-import { MdCopyAll, MdDelete } from "react-icons/md";
+import { MdCopyAll, MdDangerous, MdDelete } from "react-icons/md";
 import { Bookmark, removeBookmark } from "../../redux/slices/bookmarks";
 import copy from "copy-to-clipboard";
 import { useSelector } from "../../redux/store";
+import { BsCheck2Circle } from "react-icons/bs";
 
 type IBookmarkItem = {
   bookmark: Bookmark;
@@ -102,11 +104,18 @@ const BookmarkItem: React.FC<IBookmarkItem> = ({ bookmark }) => {
 };
 
 const ListBookmarks = () => {
-  const bookmarks = useSelector((state) => state.bookmarks);
+  const { bookmarks, isSynced } = useSelector((state) => state);
 
   return (
-    <Box>
-      <Heading>Bookmarks</Heading>
+    <Box my={2}>
+      <Flex justifyContent={"space-between"} alignItems={"center"}>
+        <Heading fontSize={"22px"}>My Bookmarks</Heading>
+        {isSynced ? (
+          <BsCheck2Circle color="green" />
+        ) : (
+          <MdDangerous color="red" />
+        )}
+      </Flex>
       <List>
         {bookmarks.map((bookmark: Bookmark) => {
           return <BookmarkItem bookmark={bookmark} key={bookmark.id} />;

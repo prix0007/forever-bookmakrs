@@ -12,11 +12,10 @@ import { Form } from "react-router-dom";
 import { addBookmark, Bookmark } from "../../redux/slices/bookmarks";
 import { validateURL } from "../../utils";
 
-
 const initialBookmark = (id: string) => ({
-  name: "My Super Link",
+  name: "",
   id: id,
-  url: "https://google.com",
+  url: "",
   color: "",
 });
 

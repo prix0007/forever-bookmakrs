@@ -34,7 +34,13 @@ import useContracts from "../hooks/useContracts";
 import { useEffect, useState } from "react";
 import useBookmarkData from "../hooks/useReadBookmark";
 import { useDispatch } from "react-redux";
-import { InitState, setAllBookmarks } from "../redux/slices/bookmarks";
+import {
+  InitState,
+  setAllBookmarks,
+  setSynced,
+} from "../redux/slices/bookmarks";
+
+import { encode } from "js-base64";
 
 const Navbar = () => {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -56,7 +62,9 @@ const Navbar = () => {
   });
   const { disconnect } = useDisconnect();
 
-  const { bookmarks, isInitialLoaded } = useSelector((state) => state);
+  const { bookmarks, isInitialLoaded, isSynced } = useSelector(
+    (state) => state
+  );
 
   const dispatch = useDispatch();
   const {
@@ -65,11 +73,23 @@ const Navbar = () => {
     isError: bookmarksError,
   } = useBookmarkData(address);
 
+  useEffect(() => {
+    if (bookmarks && bookmarksSynced) {
+      // Check if bookmarks !== bookmarksSynced -> Not Synced to blockchain, else synced.
+      const hashLocal = encode(JSON.stringify(bookmarks));
+      const hashChain = encode(JSON.stringify(bookmarksSynced));
+      dispatch(setSynced(hashChain === hashLocal));
+    } else {
+      dispatch(setSynced(false));
+    }
+  }, [bookmarks, bookmarksSynced]);
+
   // Load Initial Bookmarks to Redux
   useEffect(() => {
     if (!bookmarksSyncing && !bookmarksError && !isInitialLoaded) {
       const initState: InitState = {
         isInitialLoaded: bookmarksSynced ? true : false,
+        isSynced: bookmarksSynced ? true : false,
         bookmarks: bookmarksSynced || [],
       };
       dispatch(setAllBookmarks(initState));
@@ -95,6 +115,16 @@ const Navbar = () => {
   const [txnLoading, setTxnLoading] = useState(false);
 
   const handleSave = async () => {
+    if (isSynced) {
+      toast({
+        title: "Already Synced with Chain :)",
+        status: "success",
+        isClosable: true,
+        duration: 2000,
+      });
+      return;
+    }
+
     setTxnLoading(true);
     const cid = await store(bookmarks);
     try {
@@ -185,7 +215,7 @@ const Navbar = () => {
                           </Text>
                         )}
                       </Box>
-                      <MenuItem onClick={handleSave}>Save</MenuItem>
+                      <MenuItem onClick={handleSave}>Sync to Chain</MenuItem>
                       <MenuItem onClick={() => disconnect()}>Logout</MenuItem>
                     </MenuList>
                   </Menu>

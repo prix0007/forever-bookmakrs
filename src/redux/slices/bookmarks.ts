@@ -16,7 +16,8 @@ export type Collection = {
 };
 
 export type InitState = {
-  isInitialLoaded: boolean,
+  isInitialLoaded: boolean;
+  isSynced: boolean;
   bookmarks: Bookmark[];
 };
 
@@ -24,6 +25,7 @@ export const bookmarkSlice = createSlice({
   name: "bookmarks",
   initialState: {
     isInitialLoaded: false,
+    isSynced: false,
     bookmarks: Array<Bookmark>(),
   } as InitState,
   reducers: {
@@ -41,11 +43,15 @@ export const bookmarkSlice = createSlice({
       );
       return state;
     },
+    setSynced: (state, action: PayloadAction<boolean>) => {
+      state.isSynced = action.payload;
+      return state;
+    },
     setAllBookmarks: (state, action: PayloadAction<InitState>) => {
       return { ...action.payload };
     },
   },
 });
 
-export const { addBookmark, removeBookmark, setAllBookmarks } =
+export const { addBookmark, removeBookmark, setAllBookmarks, setSynced } =
   bookmarkSlice.actions;

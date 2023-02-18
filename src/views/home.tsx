@@ -1,4 +1,4 @@
-import { Box, Container, Flex, Heading, Text } from "@chakra-ui/react";
+import { Box, Container, Divider, Flex, Heading, Text } from "@chakra-ui/react";
 import { BsFillBookmarkCheckFill } from "react-icons/bs";
 import InputBookmark from "../components/home/inputBookmark";
 import ListBookmarks from "../components/home/listBookmarks";
@@ -14,6 +14,7 @@ const Home = () => {
         <Box>
           <InputBookmark />
         </Box>
+        <Divider />
         <Box>
           <ListBookmarks />
         </Box>
