@@ -12,7 +12,6 @@ import Root from "./views/root";
 import { Provider } from "react-redux";
 import store from "./redux/store";
 import { WagmiConfig, createClient, configureChains } from "wagmi";
-import { getDefaultProvider } from "ethers";
 import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 
 const { provider } = configureChains(

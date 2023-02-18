@@ -25,8 +25,8 @@ const BookmarkItem: React.FC<IBookmarkItem> = ({ bookmark }) => {
     md: "20px",
   };
   const fontSizeUrl = {
-    base: "16px",
-    md: "18px",
+    base: "14px",
+    md: "16px",
   };
 
   const toast = useToast();
@@ -60,6 +60,8 @@ const BookmarkItem: React.FC<IBookmarkItem> = ({ bookmark }) => {
       alignItems={"center"}
       w={"100%"}
       background={bookmark.color}
+      borderWidth={"1px"}
+      borderColor={"primary"}
     >
       <Box display={"flex"} justifyContent={"space-between"} w={"100%"}>
         <Box display={"flex"} alignItems={"center"} justifyContent={"center"}>

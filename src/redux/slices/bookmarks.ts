@@ -15,11 +15,17 @@ export type Collection = {
   collections?: Collection[];
 };
 
+export type InitState = {
+  isInitialLoaded: boolean,
+  bookmarks: Bookmark[];
+};
+
 export const bookmarkSlice = createSlice({
   name: "bookmarks",
   initialState: {
+    isInitialLoaded: false,
     bookmarks: Array<Bookmark>(),
-  },
+  } as InitState,
   reducers: {
     addBookmark: (state, action: PayloadAction<Bookmark>) => {
       // Redux Toolkit allows us to write "mutating" logic in reducers. It
@@ -35,7 +41,11 @@ export const bookmarkSlice = createSlice({
       );
       return state;
     },
+    setAllBookmarks: (state, action: PayloadAction<InitState>) => {
+      return { ...action.payload };
+    },
   },
 });
 
-export const { addBookmark, removeBookmark } = bookmarkSlice.actions;
+export const { addBookmark, removeBookmark, setAllBookmarks } =
+  bookmarkSlice.actions;

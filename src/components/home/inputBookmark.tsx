@@ -12,6 +12,7 @@ import { Form } from "react-router-dom";
 import { addBookmark, Bookmark } from "../../redux/slices/bookmarks";
 import { validateURL } from "../../utils";
 
+
 const initialBookmark = (id: string) => ({
   name: "My Super Link",
   id: id,
@@ -78,10 +79,6 @@ const InputBookmark = () => {
       ...initialBookmark(nanoid()),
     });
   };
-
-  //   const removeBookMarkFromStore = (id: string) => {
-  //     dispatch(removeBookmark({ id }));
-  //   };
 
   return (
     <Form>

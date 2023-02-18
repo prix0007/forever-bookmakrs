@@ -1,13 +1,16 @@
-import { Box, Container, Heading, Text } from "@chakra-ui/react";
-import React from "react";
+import { Box, Container, Flex, Heading, Text } from "@chakra-ui/react";
+import { BsFillBookmarkCheckFill } from "react-icons/bs";
 import InputBookmark from "../components/home/inputBookmark";
 import ListBookmarks from "../components/home/listBookmarks";
 
 const Home = () => {
   return (
     <Box>
-      <Container py={2} maxWidth={{base: "300px", md: "800px"}}>
-        <Heading textAlign={"center"}>Forever Bookmarks</Heading>
+      <Container py={2} maxWidth={{ base: "300px", md: "800px" }}>
+        <Flex alignItems={"center"} justifyContent={"center"}>
+          <BsFillBookmarkCheckFill fontSize={"32px"} />
+          <Heading>Forever Bookmarks</Heading>
+        </Flex>
         <Box>
           <InputBookmark />
         </Box>
