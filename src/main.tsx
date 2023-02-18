@@ -1,6 +1,7 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import React from "react";
 import * as ReactDOM from "react-dom/client";
+import { filecoinHyperspace } from "wagmi/chains";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home, { homeLoader } from "./views/home";
@@ -10,12 +11,24 @@ import Root from "./views/root";
 
 import { Provider } from "react-redux";
 import store from "./redux/store";
-import { WagmiConfig, createClient } from "wagmi";
+import { WagmiConfig, createClient, configureChains } from "wagmi";
 import { getDefaultProvider } from "ethers";
+import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
+
+const { provider } = configureChains(
+  [filecoinHyperspace],
+  [
+    jsonRpcProvider({
+      rpc: () => ({
+        http: `https://api.hyperspace.node.glif.io/rpc/v1`,
+      }),
+    }),
+  ]
+);
 
 const client = createClient({
   autoConnect: true,
-  provider: getDefaultProvider(),
+  provider: provider,
 });
 
 const router = createBrowserRouter([

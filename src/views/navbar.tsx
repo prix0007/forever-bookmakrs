@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  CircularProgress,
   Container,
   List,
   Menu,
@@ -14,7 +15,8 @@ import { useTheme } from "@emotion/react";
 import { Link } from "react-router-dom";
 
 import { BsFillSunFill, BsFillMoonStarsFill } from "react-icons/bs";
-import { useAccount, useConnect, useDisconnect } from "wagmi";
+import { useAccount, useConnect, useDisconnect, useBalance } from "wagmi";
+
 import { InjectedConnector } from "wagmi/connectors/injected";
 
 import Blockies from "react-blockies";
@@ -29,6 +31,15 @@ const Navbar = () => {
     connector: new InjectedConnector(),
   });
   const { disconnect } = useDisconnect();
+
+  const {
+    data: balance,
+    isError,
+    isLoading,
+  } = useBalance({
+    address: address,
+    enabled: !!address,
+  });
 
   return (
     <Box py={2}>
@@ -76,13 +87,21 @@ const Navbar = () => {
                     <MenuList>
                       <Box
                         display={"flex"}
+                        flexDir={"column"}
                         alignItems={"center"}
                         justifyContent={"center"}
                         minH={"40px"}
                       >
-                        <Text>{`${shortenString(
+                        <Text fontSize={"20px"}>{`${shortenString(
                           address as `0x${string}`
                         )}`}</Text>
+                        {isLoading && <CircularProgress isIndeterminate />}
+                        {balance && (
+                          <Text fontWeight={"semibold"}>
+                            {balance.formatted}{" "}
+                            {balance.symbol}
+                          </Text>
+                        )}
                       </Box>
                       <MenuItem onClick={() => disconnect()}>Logout</MenuItem>
                     </MenuList>
