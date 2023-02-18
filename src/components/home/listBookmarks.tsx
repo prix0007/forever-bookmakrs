@@ -10,10 +10,11 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { MdCopyAll, MdDelete } from "react-icons/md";
 import { Bookmark, removeBookmark } from "../../redux/slices/bookmarks";
 import copy from "copy-to-clipboard";
+import { useSelector } from "../../redux/store";
 
 type IBookmarkItem = {
   bookmark: Bookmark;
