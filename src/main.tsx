@@ -10,6 +10,13 @@ import Root from "./views/root";
 
 import { Provider } from "react-redux";
 import store from "./redux/store";
+import { WagmiConfig, createClient } from "wagmi";
+import { getDefaultProvider } from "ethers";
+
+const client = createClient({
+  autoConnect: true,
+  provider: getDefaultProvider(),
+});
 
 const router = createBrowserRouter([
   {
@@ -36,10 +43,12 @@ const rootElement =
   document.getElementById("root") || document.createElement("div");
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
-    <ChakraProvider>
-      <Provider store={store}>
-        <RouterProvider router={router} />
-      </Provider>
-    </ChakraProvider>
+    <WagmiConfig client={client}>
+      <ChakraProvider>
+        <Provider store={store}>
+          <RouterProvider router={router} />
+        </Provider>
+      </ChakraProvider>
+    </WagmiConfig>
   </React.StrictMode>
 );
