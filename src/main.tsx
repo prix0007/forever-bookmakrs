@@ -3,7 +3,7 @@ import React from "react";
 import * as ReactDOM from "react-dom/client";
 import { filecoinHyperspace } from "wagmi/chains";
 
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createHashRouter, RouterProvider } from "react-router-dom";
 import Home, { homeLoader } from "./views/home";
 import About, { aboutLoader } from "./views/about";
 import NoPage from "./views/404";
@@ -13,6 +13,7 @@ import { Provider } from "react-redux";
 import store from "./redux/store";
 import { WagmiConfig, createClient, configureChains } from "wagmi";
 import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
+import Index, { indexLoader } from "./views";
 
 const { provider } = configureChains(
   [filecoinHyperspace],
@@ -30,12 +31,17 @@ const client = createClient({
   provider: provider,
 });
 
-const router = createBrowserRouter([
+const router = createHashRouter([
   {
     path: "/",
     element: <Root />,
     errorElement: <NoPage />,
     children: [
+      {
+        path: "/",
+        element: <Index />,
+        loader: indexLoader,
+      },
       {
         path: "home",
         element: <Home />,
