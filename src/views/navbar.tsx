@@ -8,11 +8,9 @@ import {
   MenuItem,
   MenuList,
   Text,
-  Tooltip,
   useColorMode,
 } from "@chakra-ui/react";
 import { useTheme } from "@emotion/react";
-import React from "react";
 import { Link } from "react-router-dom";
 
 import { BsFillSunFill, BsFillMoonStarsFill } from "react-icons/bs";
