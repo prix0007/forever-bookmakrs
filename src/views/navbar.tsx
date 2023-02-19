@@ -65,7 +65,7 @@ const Navbar = () => {
   });
   const { disconnect } = useDisconnect();
 
-  const { bookmarks, isInitialLoaded, isSynced } = useSelector(
+  const { root: allbookmarks, isInitialLoaded, isSynced } = useSelector(
     (state) => state
   );
 
@@ -77,15 +77,15 @@ const Navbar = () => {
   } = useBookmarkData(address);
 
   useEffect(() => {
-    if (bookmarks && bookmarksSynced) {
+    if (allbookmarks && bookmarksSynced) {
       // Check if bookmarks !== bookmarksSynced -> Not Synced to blockchain, else synced.
-      const hashLocal = encode(JSON.stringify(bookmarks));
+      const hashLocal = encode(JSON.stringify(allbookmarks));
       const hashChain = encode(JSON.stringify(bookmarksSynced));
       dispatch(setSynced(hashChain === hashLocal));
     } else {
       dispatch(setSynced(false));
     }
-  }, [bookmarks, bookmarksSynced]);
+  }, [allbookmarks, bookmarksSynced]);
 
   // Load Initial Bookmarks to Redux
   useEffect(() => {
@@ -93,7 +93,9 @@ const Navbar = () => {
       const initState: InitState = {
         isInitialLoaded: bookmarksSynced ? true : false,
         isSynced: bookmarksSynced ? true : false,
-        bookmarks: bookmarksSynced || [],
+        root: {
+          ...bookmarksSynced
+        }
       };
       dispatch(setAllBookmarks(initState));
       if (bookmarksSynced) {
@@ -129,7 +131,7 @@ const Navbar = () => {
     }
 
     setTxnLoading(true);
-    const cid = await store(bookmarks);
+    const cid = await store(allbookmarks);
     try {
       const txn = await bookmarksContract?.storeBookmark(cid);
       const txnReciept = await txn.wait();

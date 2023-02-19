@@ -1,6 +1,15 @@
-import { Box, Container, Divider, Flex, Heading, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Container,
+  Divider,
+  Flex,
+  Heading,
+  SimpleGrid,
+  Text,
+} from "@chakra-ui/react";
 import { BsFillBookmarkCheckFill } from "react-icons/bs";
 import InputBookmark from "../components/home/inputBookmark";
+import InputCollection from "../components/home/inputCollection";
 import ListBookmarks from "../components/home/listBookmarks";
 
 const Home = () => {
@@ -12,7 +21,10 @@ const Home = () => {
           <Heading>Forever Bookmarks</Heading>
         </Flex>
         <Box>
-          <InputBookmark />
+          <SimpleGrid columns={[1, 2]} spacing="40px">
+            <InputBookmark />
+            <InputCollection />
+          </SimpleGrid>
         </Box>
         <Divider />
         <Box>

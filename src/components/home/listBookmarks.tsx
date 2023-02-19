@@ -3,6 +3,7 @@ import {
   Flex,
   Heading,
   IconButton,
+  Link,
   List,
   ListIcon,
   ListItem,
@@ -13,22 +14,27 @@ import {
 import React from "react";
 import { useDispatch } from "react-redux";
 import { MdCopyAll, MdDangerous, MdDelete } from "react-icons/md";
-import { Bookmark, removeBookmark } from "../../redux/slices/bookmarks";
+import {
+  Bookmark,
+  Collection,
+  removeBookmark,
+} from "../../redux/slices/bookmarks";
 import copy from "copy-to-clipboard";
 import { useSelector } from "../../redux/store";
 import { BsCheck2Circle } from "react-icons/bs";
+import CollapsableListItem from "./collapsableListItem";
 
 type IBookmarkItem = {
   bookmark: Bookmark;
 };
 const BookmarkItem: React.FC<IBookmarkItem> = ({ bookmark }) => {
   const fontSizeName = {
-    base: "18px",
-    md: "20px",
-  };
-  const fontSizeUrl = {
     base: "14px",
     md: "16px",
+  };
+  const fontSizeUrl = {
+    base: "12px",
+    md: "14px",
   };
 
   const toast = useToast();
@@ -55,7 +61,7 @@ const BookmarkItem: React.FC<IBookmarkItem> = ({ bookmark }) => {
 
   return (
     <ListItem
-      p={2}
+      p={1}
       my={1}
       borderRadius={"2px"}
       display={"flex"}
@@ -70,9 +76,15 @@ const BookmarkItem: React.FC<IBookmarkItem> = ({ bookmark }) => {
           <Text mx={2} fontWeight={"bold"} fontSize={fontSizeName}>
             {bookmark.name}
           </Text>
-          <Text mx={2} fontSize={fontSizeUrl}>
+          <Link
+            href={bookmark.url}
+            target={"_blank"}
+            rel={"noreferer noopener"}
+            mx={2}
+            fontSize={fontSizeUrl}
+          >
             {bookmark.url}
-          </Text>
+          </Link>
         </Box>
         <Box>
           <Tooltip label={"Copy URL"} placement={"top"}>
@@ -103,13 +115,49 @@ const BookmarkItem: React.FC<IBookmarkItem> = ({ bookmark }) => {
   );
 };
 
+type IDisplayCollection = {
+  collection: Collection;
+};
+const DisplayCollection: React.FC<IDisplayCollection> = ({ collection }) => {
+  const {
+    bookmarks: localBookmarks,
+    collections: localCollections,
+    name: localCollectionName,
+    id: localCollectionKey,
+  } = collection;
+  return (
+    <List>
+      <CollapsableListItem name={localCollectionName}>
+        <List>
+          {localBookmarks &&
+            localBookmarks.map((bookmark: Bookmark) => {
+              return <BookmarkItem bookmark={bookmark} key={bookmark.id} />;
+            })}
+        </List>
+        {localCollections &&
+          localCollections.map((collection, index) => {
+            return (
+              <DisplayCollection
+                collection={collection}
+                key={localCollectionKey + "nested" + index}
+              />
+            );
+          })}
+      </CollapsableListItem>
+    </List>
+  );
+};
+
 const ListBookmarks = () => {
-  const { bookmarks, isSynced } = useSelector((state) => state);
+  const {
+    root: { bookmarks, collections },
+    isSynced,
+  } = useSelector((state) => state);
 
   return (
     <Box my={2}>
       <Flex justifyContent={"space-between"} alignItems={"center"}>
-        <Heading fontSize={"22px"}>My Bookmarks</Heading>
+        <Heading fontSize={"22px"}>All Bookmarks</Heading>
         {isSynced ? (
           <BsCheck2Circle color="green" />
         ) : (
@@ -117,9 +165,16 @@ const ListBookmarks = () => {
         )}
       </Flex>
       <List>
-        {bookmarks.map((bookmark: Bookmark) => {
-          return <BookmarkItem bookmark={bookmark} key={bookmark.id} />;
-        })}
+        {bookmarks &&
+          bookmarks.map((bookmark: Bookmark) => {
+            return <BookmarkItem bookmark={bookmark} key={bookmark.id} />;
+          })}
+        {collections &&
+          collections.map((collection: Collection) => {
+            return (
+              <DisplayCollection collection={collection} key={"root nested"} />
+            );
+          })}
       </List>
     </Box>
   );
