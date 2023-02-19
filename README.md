@@ -7,3 +7,11 @@ Bookmarks are normally accessed through a menu in the user's web browser, and fo
 ## Features
 
 Works everywhere, anywhere. Access it from browser, app, extension you decide.
+
+# Upcoming Features
+
+- [x] Syncing with FEVM Chain
+- [ ] Themeing and colors with each bookmarks
+- [ ] Collections
+- [ ] Nested Collections
+- [ ] Export All functionality
