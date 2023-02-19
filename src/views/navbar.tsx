@@ -36,6 +36,7 @@ import useBookmarkData from "../hooks/useReadBookmark";
 import { useDispatch } from "react-redux";
 import {
   InitState,
+  normalizeBookmarks,
   setAllBookmarks,
   setSynced,
 } from "../redux/slices/bookmarks";
@@ -65,9 +66,11 @@ const Navbar = () => {
   });
   const { disconnect } = useDisconnect();
 
-  const { root: allbookmarks, isInitialLoaded, isSynced } = useSelector(
-    (state) => state
-  );
+  const {
+    root: allbookmarks,
+    isInitialLoaded,
+    isSynced,
+  } = useSelector((state) => state);
 
   const dispatch = useDispatch();
   const {
@@ -87,6 +90,10 @@ const Navbar = () => {
     }
   }, [allbookmarks, bookmarksSynced]);
 
+  useEffect(() => {
+    dispatch(normalizeBookmarks());
+  }, [allbookmarks]);
+
   // Load Initial Bookmarks to Redux
   useEffect(() => {
     if (!bookmarksSyncing && !bookmarksError && !isInitialLoaded) {
@@ -94,10 +101,14 @@ const Navbar = () => {
         isInitialLoaded: bookmarksSynced ? true : false,
         isSynced: bookmarksSynced ? true : false,
         root: {
-          ...bookmarksSynced
-        }
+          ...bookmarksSynced,
+        },
+        normalizedRoot: {
+          bookmarks: [],
+          collections: [],
+        },
       };
-      dispatch(setAllBookmarks(initState));
+      // dispatch(setAllBookmarks(initState));
       if (bookmarksSynced) {
         toast({
           title: "Bookmarks Synced.",
@@ -155,6 +166,10 @@ const Navbar = () => {
     setTxnLoading(false);
   };
 
+  const normalise = () => {
+    dispatch(normalizeBookmarks());
+  };
+
   return (
     <Box>
       <Notice />
@@ -180,6 +195,7 @@ const Navbar = () => {
             </Link>
           </Box>
           <Box mt={{ base: "1em", md: "0em" }} display={"flex"}>
+            <Button onClick={normalise}>Normalise</Button>
             <Button onClick={toggleColorMode}>
               {colorMode !== "light" ? (
                 <BsFillSunFill />
