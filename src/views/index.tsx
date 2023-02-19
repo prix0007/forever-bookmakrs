@@ -5,6 +5,8 @@ import {
   Text,
   UnorderedList,
   ListItem,
+  Link,
+  Button,
 } from "@chakra-ui/react";
 import Logo from "../icons/logo";
 import ReactMarkdown from "react-markdown";
@@ -42,6 +44,18 @@ const Index = () => {
             Works everywhere, anywhere. Access it from browser, app, extension
             you decide.
           </Heading>
+        </Box>
+        <Box border={"1px"} borderColor={"gray"} borderStyle={"dashed"} p={5} my={2}>
+          <Text>
+            You will need some testnet faucet funds first to save bookmarks.
+          </Text>
+          <Link
+            href={"https://hyperspace.yoga/#faucet"}
+            target={"_blank"}
+            rel={"noopener noreferer"}
+          >
+            <Button color={"primary"}>Get Testnet Funds</Button>
+          </Link>
         </Box>
         <Box my={2}>
           <Text fontWeight={"bold"} color={"coral"}>

@@ -43,6 +43,7 @@ import {
 import { encode } from "js-base64";
 
 import Logo from "../icons/logo";
+import Notice from "../components/navbar/notice";
 
 const Navbar = () => {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -153,8 +154,9 @@ const Navbar = () => {
   };
 
   return (
-    <Box py={2}>
-      <Container px={2} maxW={{ base: "800px" }}>
+    <Box>
+      <Notice />
+      <Container py={2} px={2} maxW={{ base: "800px" }}>
         <Box
           display={"flex"}
           flexDirection={{ base: "column", md: "row" }}
