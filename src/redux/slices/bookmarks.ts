@@ -63,6 +63,53 @@ const normalizeData = (
   };
 };
 
+const appendCollectionWithId = (
+  root: Collection,
+  id: string,
+  newCollectionName: string,
+  newAddedRoot: Collection
+): Collection => {
+  if (root.id === id) {
+    if (root.collections) {
+      return {
+        ...root,
+        collections: [
+          ...root.collections,
+          {
+            bookmarks: [],
+            collections: [],
+            name: newCollectionName,
+            id: nanoid(),
+          },
+        ],
+      };
+    }
+    return {
+      ...root,
+      collections: [
+        {
+          bookmarks: [],
+          collections: [],
+          name: newCollectionName,
+          id: nanoid(),
+        },
+      ],
+    };
+  }
+
+  // if (root.collections) {
+  //   for (let i = 0; i < root.collections.length; ++i) {
+  //     newCollection = appendCollectionWithId(
+  //       root.collections[i],
+  //       id,
+  //       newCollectionName,
+  //       newAddedRoot
+  //     );
+  //   }
+  // }
+  return { ...root };
+};
+
 export const bookmarkSlice = createSlice({
   name: "bookmarks",
   initialState: {
@@ -104,59 +151,60 @@ export const bookmarkSlice = createSlice({
               url: "https://google.com/1",
             },
           ],
-          collections: [
-            {
-              name: "Science",
-              id: nanoid(),
-              bookmarks: [
-                {
-                  id: nanoid(),
-                  name: "Nester 333",
-                  url: "https://somelink.com",
-                },
-              ],
-            },
-            {
-              name: "Maths",
-              id: nanoid(),
-              bookmarks: [
-                {
-                  id: nanoid(),
-                  name: "Maths Nested 444",
-                  url: "https://somelink.com",
-                },
-              ],
-            },
-            {
-              name: "Zero Knowledge",
-              id: nanoid(),
-              bookmarks: [
-                {
-                  id: nanoid(),
-                  name: "ZKP Nested 123",
-                  url: "https://somelink.com",
-                },
-                {
-                  id: nanoid(),
-                  name: "ZKP Nested 234",
-                  url: "https://somelink.com",
-                },
-                {
-                  id: nanoid(),
-                  name: "ZKP Nested 345",
-                  url: "https://somelink.com",
-                },
-              ],
-              collections: [
-                {
-                  id: nanoid(),
-                  name: "Creating SNS",
-                  bookmarks: [],
-                  collections: [],
-                },
-              ],
-            },
-          ],
+          collections: []
+          // collections: [
+          //   {
+          //     name: "Science",
+          //     id: nanoid(),
+          //     bookmarks: [
+          //       {
+          //         id: nanoid(),
+          //         name: "Nester 333",
+          //         url: "https://somelink.com",
+          //       },
+          //     ],
+          //   },
+          //   {
+          //     name: "Maths",
+          //     id: nanoid(),
+          //     bookmarks: [
+          //       {
+          //         id: nanoid(),
+          //         name: "Maths Nested 444",
+          //         url: "https://somelink.com",
+          //       },
+          //     ],
+          //   },
+          //   {
+          //     name: "Zero Knowledge",
+          //     id: nanoid(),
+          //     bookmarks: [
+          //       {
+          //         id: nanoid(),
+          //         name: "ZKP Nested 123",
+          //         url: "https://somelink.com",
+          //       },
+          //       {
+          //         id: nanoid(),
+          //         name: "ZKP Nested 234",
+          //         url: "https://somelink.com",
+          //       },
+          //       {
+          //         id: nanoid(),
+          //         name: "ZKP Nested 345",
+          //         url: "https://somelink.com",
+          //       },
+          //     ],
+          //     collections: [
+          //       {
+          //         id: nanoid(),
+          //         name: "Creating SNS",
+          //         bookmarks: [],
+          //         collections: [],
+          //       },
+          //     ],
+          //   },
+          // ],
         },
       ],
     },
@@ -187,6 +235,38 @@ export const bookmarkSlice = createSlice({
     setAllBookmarks: (state, action: PayloadAction<InitState>) => {
       return { ...action.payload };
     },
+    addCollection: (
+      state,
+      action: PayloadAction<{
+        name: string;
+        parent?: string;
+      }>
+    ) => {
+      if (!action.payload.parent) {
+        state.root.collections.push({
+          bookmarks: [],
+          collections: [],
+          name: action.payload.name,
+          id: nanoid(),
+        });
+        return state;
+      } else {
+        const newState = appendCollectionWithId(
+          current(state.root),
+          action.payload.parent,
+          action.payload.name,
+          {
+            bookmarks: [],
+            collections: [],
+            name: "",
+            id: "",
+          }
+        );
+        console.log(newState)
+        state.root = newState;
+        return state;
+      }
+    },
     normalizeBookmarks: (state) => {
       const rootState = current(state.root);
       const normalizedData = normalizeData([], [], rootState);
@@ -202,4 +282,5 @@ export const {
   setAllBookmarks,
   setSynced,
   normalizeBookmarks,
+  addCollection,
 } = bookmarkSlice.actions;

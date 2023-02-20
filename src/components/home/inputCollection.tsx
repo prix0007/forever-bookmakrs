@@ -16,7 +16,7 @@ import { nanoid } from "@reduxjs/toolkit";
 import React, { useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Form } from "react-router-dom";
-import { Collection, NormalizedCollection } from "../../redux/slices/bookmarks";
+import { addCollection, Collection, NormalizedCollection } from "../../redux/slices/bookmarks";
 import { useSelector } from "../../redux/store";
 
 const initialCollection = (id: string) => ({
@@ -73,7 +73,10 @@ const InputCollection = () => {
     if (!handleValidation()) {
       return;
     }
-    console.log("Add this collection to the store");
+    dispatch(addCollection({
+      name: formState.name,
+      parent: selectedCollection
+    }))
   };
 
   const { collections } = useSelector((state) => state.normalizedRoot);
